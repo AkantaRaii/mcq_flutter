@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/course.dart';
 import '../widget/courseCard.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -14,22 +14,29 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<Course> courses = [];
   void getData() async {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2:3000/api/courses'));
+    WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: ".env");
+    print("yo chai aafdai");
 
+    final response = await http.get(Uri.parse('${dotenv.env['api']}/api/courses'));
+    print('jaksdjhfakjsd');
     if (response.statusCode == 200) {
+      print('aayo');
+      print('good xa hai');
       List<dynamic> jsonData = json.decode(response.body);
+      print(jsonData);
       setState(() {
         courses = jsonData.map((json) => Course.fromJson(json)).toList();
       });
     } else {
+      print('gedaasdfasdfasdfasdfasdfasdfasdf\n\nasdfasdfa\n');
       print('Failed to load data: ${response.statusCode}');
     }
   }
-
   @override
   void initState() {
     super.initState();
+    print('ini state');
     getData();
   }
 

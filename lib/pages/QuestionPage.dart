@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:mcq/pages/WrongAnswer.dart';
 import 'package:mcq/widget/optionCard.dart';
@@ -6,7 +7,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:mcq/models/question.dart';
 import 'package:mcq/models/option.dart';
-import ''
 class QuestionPage extends StatefulWidget {
   const QuestionPage({super.key});
 
@@ -15,12 +15,14 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
+  Stopwatch stopwatch=Stopwatch();
   Map data = {};
   List<Question> questions = [];
   int questionIndex = 0; // Start from 0
   bool isLoading = true; // Track loading state
   bool isOptionWrong=false;
-
+  int minutesTaken=0;
+  int secondsTaken=0;
   void change_isOptionWrongFlag(){
     setState(() {
       if (isOptionWrong){
@@ -33,7 +35,12 @@ class _QuestionPageState extends State<QuestionPage> {
       }
     });
   }
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    stopwatch.start();
+  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -43,7 +50,7 @@ class _QuestionPageState extends State<QuestionPage> {
 
   void getData() async {
     final response = await http.get(Uri.parse(
-        'http://10.0.2.2:3000/api/course/subject/${data['subject_id']}/question/${data['number_of_question']}'));
+        '${dotenv.env['api']}/api/course/subject/${data['subject_id']}/question/${data['number_of_question']}'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
@@ -52,7 +59,7 @@ class _QuestionPageState extends State<QuestionPage> {
       for (var question in fetchedQuestions) {
         try {
           final optionResponse = await http.get(Uri.parse(
-              'http://10.0.2.2:3000/api/course/subject/question/option/${question.questionId}'));
+              '${dotenv.env['api']}/api/course/subject/question/option/${question.questionId}'));
 
           if (optionResponse.statusCode == 200) {
             List<dynamic> questionData = json.decode(optionResponse.body);
@@ -144,18 +151,22 @@ class _QuestionPageState extends State<QuestionPage> {
                                   setState(() {
                                     questions.removeAt(questionIndex);
                                   });
-                                  print("correct ${questions.length}");
                                 } else {
                                   setState(() {
                                     questions.insert(
                                         insertIndex, questions[questionIndex]);
                                   });
                                   change_isOptionWrongFlag();
-                                  print("incorrect ${questions.length}");
                                 }
                               } else {
-                                print('sakyo');
-                                Navigator.pushNamed(context, '/Wrongquestion',);
+                                stopwatch.stop();
+                                Navigator.pushNamed(context, '/subjects/ten_twenty/question/exitquestion',
+                                arguments:{
+                                  'minutes':stopwatch.elapsed.inMinutes,
+                                  'seconds':stopwatch.elapsed.inSeconds%60,
+                                  'subject_id': data['subject_id'],
+                                  'subject_name':data['subject_name']
+                                });
                               }
                             },
                             child: OptionCard(
@@ -191,4 +202,4 @@ class Finished extends StatelessWidget {
     );
   }
 }
-
+// /askdjfalskdhflakds

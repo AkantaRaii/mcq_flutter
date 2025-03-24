@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mcq/models/subject.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -29,7 +30,7 @@ class _SubjectPageState extends State<SubjectPage> {
   }
 
   void getData() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/course/$courseId/subjects/'));
+    final response = await http.get(Uri.parse('${dotenv.env['api']}/api/course/$courseId/subjects/'));
 
     if (response.statusCode == 200) {
       // Parse the response and update UI with course name or any other data

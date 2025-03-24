@@ -48,25 +48,26 @@ class WrongAnswer extends StatelessWidget {
                         children: [
                           Text("Incorrect",style: TextStyle(color:Colors.red[600],fontSize: 18,fontWeight: FontWeight.bold,),),
                           Text("You'll see this question again soon",style: TextStyle(color:Colors.red),),
-                        ],
+       /**/                 ],
                       ),)
                   ),
                   Container(
                     padding:EdgeInsets.symmetric(horizontal: 25,vertical: 15),
                       child: Text(question.questionText,style: TextStyle(fontSize: 20, letterSpacing: 1.3, fontWeight: FontWeight.bold),
+
                       )
                   ),
                   Divider(height: 10,),
                   Container(
                       padding:EdgeInsets.symmetric(horizontal: 15,vertical: 20),
-                      decoration: BoxDecoration(
-                        // color:Colors.greenAccent[100]
-                      ),
                       child: Row(
                         children: <Widget>[
                           Icon(Icons.check,color: Colors.green,),
                           SizedBox(width:10),
-                          Text(correctOption.optionText,style: TextStyle(color:Colors.green,fontSize: 18, letterSpacing: 1.3,),
+                          Expanded(
+                            child: Text(correctOption.optionText,style: TextStyle(color:Colors.green,fontSize: 18, letterSpacing: 1.3,),
+                              overflow: TextOverflow.visible,
+                            ),
                           ),
                         ],
                       )
