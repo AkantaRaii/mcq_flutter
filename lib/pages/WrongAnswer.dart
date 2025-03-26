@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mcq/models/question.dart';
-import 'package:mcq/models/option.dart';
+import 'package:mcq/models/questionoption.dart';
 class WrongAnswer extends StatelessWidget {
   final VoidCallback change_isOptionWrong;
   final Question question;
