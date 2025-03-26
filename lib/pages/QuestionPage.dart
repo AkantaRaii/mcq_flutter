@@ -5,8 +5,7 @@ import 'package:mcq/pages/WrongAnswer.dart';
 import 'package:mcq/widget/optionCard.dart';
 import 'dart:convert';
 import 'dart:math';
-import 'package:mcq/models/question.dart';
-import 'package:mcq/models/option.dart';
+import 'package:mcq/models/questionoption.dart';
 class QuestionPage extends StatefulWidget {
   const QuestionPage({super.key});
 
@@ -50,29 +49,14 @@ class _QuestionPageState extends State<QuestionPage> {
 
   void getData() async {
     final response = await http.get(Uri.parse(
-        '${dotenv.env['api']}/api/course/subject/${data['subject_id']}/question/${data['number_of_question']}'));
+        '${dotenv.env['api']}/api/course/subject/${data['subject_id']}/questionoption/${data['number_of_question']}'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
-      List<Question> fetchedQuestions = jsonData.map((json) => Question.fromJson(json)).toList();
-
-      for (var question in fetchedQuestions) {
-        try {
-          final optionResponse = await http.get(Uri.parse(
-              '${dotenv.env['api']}/api/course/subject/question/option/${question.questionId}'));
-
-          if (optionResponse.statusCode == 200) {
-            List<dynamic> questionData = json.decode(optionResponse.body);
-            List<Option> fetchedOptions = questionData.map((json) => Option.fromJson(json)).toList();
-            question.options.addAll(fetchedOptions);
-          }
-        } catch (err) {
-          print("Error fetching options for question ${question.questionId}: $err");
-        }
-      }
+      List<Question> q = jsonData.map((q) => Question.fromJson(q)).toList();
 
       setState(() {
-        questions = fetchedQuestions;
+        questions = q;
         isLoading = false;
       });
     } else {
@@ -103,7 +87,7 @@ class _QuestionPageState extends State<QuestionPage> {
                   padding: EdgeInsets.all(24),
                   child: Container(
                     padding: EdgeInsets.all(10),
-                    child: Center(child: Text('Quiz App')),
+                    child: Center(child: Text('NMC Prep',style:TextStyle(fontSize: 40,color: Colors.black))),
                   ),
                 ),
                 Container(

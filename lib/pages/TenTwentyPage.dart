@@ -11,7 +11,7 @@ class TenTwenty extends StatefulWidget {
 class _TenTwentyState extends State<TenTwenty> {
   Map data={};
   List<String> texts = ['10 Questions', '20 Questions', '30 Questions'];
-  List numberOfQuestion=[10,20,30];
+  List numberOfQuestion=[10,20,100];
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
